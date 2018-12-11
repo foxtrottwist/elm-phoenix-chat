@@ -1,9 +1,15 @@
 const path = require('path')
-
+const glob = require('glob')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const PurgecssPlugin = require('purgecss-webpack-plugin')
+
+const PATHS = {
+  elm: `${path.join(__dirname, 'elm')}/src/**/*.elm`,
+  templates: path.resolve('../', '*/*/templates/*/**/*.eex'),
+}
 
 module.exports = (env, options) => ({
   entry: './ts/main.ts',
@@ -27,7 +33,21 @@ module.exports = (env, options) => ({
             ? 'style-loader'
             : MiniCssExtractPlugin.loader,
           'css-loader',
-          'postcss-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              plugins: () => [
+                require('tailwindcss')('./tailwind.js'),
+                require('postcss-preset-env')({
+                  autoprefixer: {
+                    flexbox: 'no-2009',
+                  },
+                  stage: 3,
+                }),
+              ],
+            },
+          },
         ],
       },
       {
@@ -51,6 +71,9 @@ module.exports = (env, options) => ({
   },
   plugins: [
     new MiniCssExtractPlugin({ filename: '../css/main.css' }),
+    new PurgecssPlugin({
+      paths: glob.sync(PATHS.elm).concat(glob.sync(PATHS.templates)),
+    }),
     new CopyWebpackPlugin([{ from: 'static/', to: '../' }]),
   ],
   optimization: {
