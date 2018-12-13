@@ -6,6 +6,7 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
 
+// Using glob to return file paths for Purecss to check https://www.purgecss.com/with-webpack
 const PATHS = {
   elm: `${path.join(__dirname, 'elm')}/src/**/*.elm`,
   templates: path.resolve('../', '*/*/templates/*/**/*.eex'),
@@ -19,13 +20,27 @@ module.exports = (env, options) => ({
   },
   module: {
     rules: [
+      // Babel/Webpack/Typescript configuration
+      // https://medium.com/@francesco.agnoletto/how-to-set-up-typescript-with-babel-and-webpack-6fba1b6e72d5
+      // https://iamturns.com/typescript-babel/
+      // https://webpack.js.org/loaders/babel-loader/
       {
         test: /\.ts$/,
         exclude: /node_modules/,
         use: {
           loader: 'babel-loader',
+          options: {
+            presets: ['@babel/typescript', ['@babel/env', { modules: false }]],
+            plugins: [
+              '@babel/proposal-class-properties',
+              '@babel/proposal-object-rest-spread',
+            ],
+          },
         },
       },
+      // CSS configuration
+      // https://github.com/webpack-contrib/mini-css-extract-plugin
+      // https://github.com/csstools/postcss-preset-env
       {
         test: /\.css$/,
         use: [
@@ -78,6 +93,10 @@ module.exports = (env, options) => ({
   ],
   optimization: {
     minimizer: [
+      // Options borrowed from the Elm SPA example:
+      // https://github.com/rtfeldman/elm-spa-example/tree/54e3facfac9e208efe9ce02ad817d444c3411ca9#step-2
+      // Webpack config taken from:
+      // https://github.com/levelhq/level/blob/master/assets/webpack.config.js
       new UglifyJsPlugin({
         uglifyOptions: {
           compress: {
