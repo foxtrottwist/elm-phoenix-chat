@@ -1,9 +1,9 @@
 use Mix.Config
 
 config :vmeste, Vmeste.Repo,
-  username: System.get_env("DATABASE_USER"),
-  password: System.get_env("DATABASE_PASS"),
-  database: System.get_env("DATABASE_NAME"),
+  username: System.get_env("POSTGRES_USER"),
+  password: System.get_env("POSTGRES_PASSWORD"),
+  database: System.get_env("POSTGRES_DB"),
   hostname: System.get_env("DATABASE_HOST"),
   pool_size: 15
 
