@@ -1,0 +1,13 @@
+#!/bin/bash
+
+export HOSTNAME=localhost
+export SECRET_KEY_BASE="u1QXlca4XEZKb1o3HL/aUlznI1qstCNAQ6yme/lFbFIs0Iqiq/annZ+Ty8JyUCDc"
+export DATABASE_HOST=localhost
+export DATABASE_USER=postgres
+export DATABASE_PASS=postgres
+export DATABASE_NAME=vmeste_dev
+export PORT=4000
+export LANG=en_US.UTF-8
+export REPLACE_OS_VARS=true
+export ERLANG_COOKIE=vmeste
+_build/prod/rel/vmeste/bin/vmeste foreground
