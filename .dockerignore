@@ -9,6 +9,5 @@ test/
 priv/static/
 .elixir_ls
 assets/elm/elm-stuff
-prod_build
-prod_run
+sql
 volumes

@@ -47,6 +47,8 @@ npm-debug.log
 # Elm
 elm-stuff
 
+# MacOS stuff
 .DS_Store
 
+# Store for Docker database container
 volumes
